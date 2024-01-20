@@ -1,16 +1,15 @@
 import { Router } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
+import { ProfileController } from '../controllers/profile';
+
 const router = Router();
 
 
-router.get('/ping', (req, res) => {
-  return res.send('pong');
+router.get('/', (req, res) => {
+  return res.send('funcionando');
 });
 
-router.post('/teste', (req, res) => {
-  console.log(req.body);
-  return res.status(StatusCodes.ACCEPTED).json('teste');
-});
+router.post('/profile', ProfileController.create);
 
 export { router };
