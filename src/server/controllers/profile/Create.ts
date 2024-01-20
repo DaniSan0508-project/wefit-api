@@ -1,5 +1,5 @@
 
-import { Request, Response } from 'express';
+import { Request, RequestHandler, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import * as yup from 'yup';
 
@@ -13,13 +13,11 @@ const bodyValidation: yup.Schema<IProfile> = yup.object().shape({
   estado: yup.string().required().min(3)
 });
 
-
-
-
-export const create = async (req: Request<{}, {}, IProfile>, res: Response) => {
+export const createBodyValidation: RequestHandler = async (req, res, next) => {
   let validatedData: IProfile | undefined = undefined;
   try {
     validatedData = await bodyValidation.validate(req.body, { abortEarly: false });
+    return next();
   } catch (error) {
     const yupError = error as yup.ValidationError;
     const errors: Record<string, string> = {};
@@ -28,10 +26,12 @@ export const create = async (req: Request<{}, {}, IProfile>, res: Response) => {
       if (!error.path) return;
       errors[error.path] = error.message;
     });
-
     return res.status(StatusCodes.BAD_REQUEST).json({
       errors,
     });
   }
-  return res.send('Create');
+};
+
+export const create = async (req: Request<{}, {}, IProfile>, res: Response) => {
+  return res.send('Created');
 };

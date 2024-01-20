@@ -10,6 +10,6 @@ router.get('/', (req, res) => {
   return res.send('funcionando');
 });
 
-router.post('/profile', ProfileController.create);
+router.post('/profile', ProfileController.createBodyValidation ,ProfileController.create);
 
 export { router };
