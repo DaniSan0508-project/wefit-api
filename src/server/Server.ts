@@ -1,11 +1,12 @@
-import express from "express";
+import express from 'express';
 
 const app = express();
 
 
 
-app.get("/ping", (req, res) => {
-  return res.send("pong");
+
+app.get('/ping', (req, res) => {
+  return res.send('pong');
 });
 
 export { app };
