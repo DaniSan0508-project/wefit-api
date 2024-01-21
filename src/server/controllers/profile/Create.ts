@@ -2,7 +2,7 @@
 import { Request, RequestHandler, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { IProfile, bodyValidation } from './validationSchema';
-import { Knex as knex } from '../../database/knex/index';
+import { insertIndividual, insertLegalEntity } from './service/profileService';
 import * as yup from 'yup';
 
 
@@ -29,26 +29,25 @@ export const createBodyValidation: RequestHandler = async (req, res, next) => {
 export const create = async (req: Request<{}, {}, IProfile>, res: Response) => {
   const { personType, ...data } = req.body;
 
+  const insertFunctions = {
+    'individual': insertIndividual,
+    'legalEntity': insertLegalEntity
+  };
+
   try {
-    if (personType === 'individual') {
-      const insertedData = await knex('individuals').insert(data).returning('*');
-      
-      return res.status(StatusCodes.CREATED).json({
-        message: 'Created individual',
-        data: insertedData,
-      });
-    } else if (personType === 'legalEntity') {
-      const insertedData = await knex('legal_entities').insert(data).returning('*');
-      
-      return res.status(StatusCodes.CREATED).json({
-        message: 'Created legal entity',
-        data: insertedData,
-      });
-    } else {
+    const insert = insertFunctions[personType];
+
+    if (!insert) {
       return res.status(StatusCodes.BAD_REQUEST).json({
         message: 'Invalid personType',
       });
     }
+
+    const insertedData = await insert(data);
+    return res.status(StatusCodes.CREATED).json({
+      message: `Created ${personType}`,
+      data: insertedData,
+    });
   } catch (error: any) {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       message: 'Failed to create the record',

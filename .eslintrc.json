@@ -17,6 +17,7 @@
         "@typescript-eslint"
     ],
     "rules": {
+        "no-useless-catch": "off",
         "indent": [
             "error",
             2
