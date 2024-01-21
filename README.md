@@ -9,6 +9,8 @@ Para iniciar o banco de dados, é necessário ter o Docker e o Docker Compose in
 
 docker-compose up -d
 
+* lembre-se de alterar o arquivo .env.example para apenas .env com as credenciais corretas de conexao
+
 Este comando irá criar um container Docker com uma instância do MySQL. Você pode acessar o banco de dados no `localhost:4568`:
 
 
