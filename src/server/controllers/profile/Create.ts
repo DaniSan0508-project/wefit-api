@@ -1,17 +1,10 @@
 
 import { Request, RequestHandler, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
+import { IProfile, bodyValidation } from './validationSchema';
 import * as yup from 'yup';
 
-interface IProfile {
-  nome: string
-  estado: string
-}
 
-const bodyValidation: yup.Schema<IProfile> = yup.object().shape({
-  nome: yup.string().required().min(3),
-  estado: yup.string().required().min(3)
-});
 
 export const createBodyValidation: RequestHandler = async (req, res, next) => {
   let validatedData: IProfile | undefined = undefined;
