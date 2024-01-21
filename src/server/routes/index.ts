@@ -4,9 +4,7 @@ import { ProfileController } from '../controllers/profile';
 const router = Router();
 
 
-router.get('/', (req, res) => {
-  return res.send('funcionando');
-});
+router.get('/getProfile/:tableName', ProfileController.getAll);
 
 router.post('/profile', ProfileController.createBodyValidation ,ProfileController.create);
 

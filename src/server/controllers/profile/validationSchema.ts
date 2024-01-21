@@ -19,41 +19,35 @@ export interface IProfile {
   acceptTerms?: boolean;
 }
 
-export const cpfValidation = yup.string().test(
-  'cpf-test',
-  'Invalid or non-existent CPF',
-  function(value) {
-    const { personType } = this.parent;
-    return personType !== 'individual' || (personType === 'individual' && value != null && cpfValidator.isValid(value));
+const validateCPF = (value: string | undefined, context: any) => {
+  const { personType, cnpj } = context.parent;
+  if (personType === 'individual' && (!value || !cpfValidator.isValid(value))) {
+    return context.createError({ message: 'Invalid or non-existent CPF' });
   }
-);
+  if (personType === 'individual' && cnpj) {
+    return context.createError({ message: 'CNPJ is not allowed for individuals' });
+  }
+  return true;
+};
 
-export const cnpjValidation = yup.string().test(
-  'cnpj-test',
-  'Invalid or non-existent CNPJ',
-  function(value) {
-    const { personType } = this.parent;
-    return personType !== 'legalEntity' || (personType === 'legalEntity' && value != null && cnpjValidator.isValid(value));
-  }
-);
 
-export const cellphoneValidation = yup.string().test(
-  'cellphone-test',
-  'Cellphone is required for individuals',
-  function(value) {
-    const { personType } = this.parent;
-    return personType !== 'individual' || (personType === 'individual' && value != null);
+
+const validateCNPJ = (value: string | undefined, context: any) => {
+  const { personType } = context.parent;
+  if (personType === 'legalEntity' && (!value || !cnpjValidator.isValid(value))) {
+    return context.createError({ message: 'Invalid or non-existent CNPJ' });
   }
-);
+  return true;
+};
 
 export const bodyValidation: yup.Schema<IProfile> = yup.object().shape({
   acceptTerms: yup.boolean().required().oneOf([true], 'Terms must be accepted'),
   name: yup.string().required('Name is required'),
   state: yup.string().required('State is required'),
   personType: yup.string().oneOf(['individual', 'legalEntity']).required('Person type is required'),
-  cpf: cpfValidation,
-  cnpj: cnpjValidation,
-  cellphone: cellphoneValidation,
+  cpf: yup.string().test('cpf-test', 'Invalid or non-existent CPF', validateCPF),
+  cnpj: yup.string().test('cnpj-test', 'Invalid or non-existent CNPJ', validateCNPJ),
+  cellphone: yup.string(),
   telephone: yup.string(),
   email: yup.string().email('Invalid email').required('Email is required'),
   zipCode: yup.string().required('Zip code is required'),
@@ -62,5 +56,10 @@ export const bodyValidation: yup.Schema<IProfile> = yup.object().shape({
   complement: yup.string(),
   city: yup.string().required('City is required'),
   district: yup.string().required('District is required'),
+  phoneOrCellphoneRequired: yup
+    .mixed()
+    .test('phone-or-cellphone-required', 'At least one of phone or cellphone is required', function () {
+      const { telephone, cellphone } = this.parent;
+      return Boolean(telephone || cellphone);
+    }),
 });
-

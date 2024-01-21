@@ -2,7 +2,7 @@
 import { Request, RequestHandler, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { IProfile, bodyValidation } from './validationSchema';
-import { insertIndividual, insertLegalEntity } from './service/profileService';
+import { getPaginatedData, insertProfile } from './service/profileService';
 import * as yup from 'yup';
 
 
@@ -26,30 +26,34 @@ export const createBodyValidation: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const create = async (req: Request<{}, {}, IProfile>, res: Response) => {
-  const { personType, ...data } = req.body;
 
-  const insertFunctions = {
-    'individual': insertIndividual,
-    'legalEntity': insertLegalEntity
-  };
+export const getAll = async (req: Request, res: Response) => {
+  const tableName = req.params.tableName;
+  const page = parseInt(req.query.page as string) || 1;
+  const limit = parseInt(req.query.limit as string) || 10;
 
   try {
-    const insert = insertFunctions[personType];
-
-    if (!insert) {
-      return res.status(StatusCodes.BAD_REQUEST).json({
-        message: 'Invalid personType',
-      });
-    }
-
-    const insertedData = await insert(data);
-    return res.status(StatusCodes.CREATED).json({
-      message: `Created ${personType}`,
-      data: insertedData,
-    });
+    const data = await getPaginatedData(page, limit, tableName);
+    return res.status(StatusCodes.OK).json(data);
   } catch (error: any) {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: 'Error retrieving data',
+      error: error.message,
+    });
+  }
+};
+
+export const create = async (req: Request<{}, {}, IProfile>, res: Response) => {
+
+  try {
+    await insertProfile(req.body);
+
+    return res.status(StatusCodes.CREATED).json({
+      message: 'Created',
+      data: req.body,
+    });
+  } catch (error: any) {
+    return res.status(StatusCodes.BAD_REQUEST).json({
       message: 'Failed to create the record',
       error: error.message,
     });
