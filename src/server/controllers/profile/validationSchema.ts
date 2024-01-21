@@ -33,9 +33,13 @@ const validateCPF = (value: string | undefined, context: any) => {
 
 
 const validateCNPJ = (value: string | undefined, context: any) => {
-  const { personType } = context.parent;
+  const { personType, cpf } = context.parent;
   if (personType === 'legalEntity' && (!value || !cnpjValidator.isValid(value))) {
     return context.createError({ message: 'Invalid or non-existent CNPJ' });
+  }
+
+  if (personType === 'legalEntity' && !cpf) {
+    return context.createError({ message: 'CPF is required for legal entities' });
   }
   return true;
 };
