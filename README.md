@@ -19,13 +19,13 @@ Este comando irá criar um container Docker com uma instância do MySQL. Você p
 Para iniciar o servidor Express, execute um dos seguintes comandos na raiz do projeto:
 
 Usando npm:
-npm install
+npm install,
 npm start
 
 
 Ou, usando Yarn:
 
-yarn
+yarn,
 yarn start
 
 ## Rotas da Aplicação
