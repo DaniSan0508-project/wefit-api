@@ -6,9 +6,9 @@ export const development: Knex.Config = {
   connection: {
     host: 'localhost',
     user: 'root',
-    password: 'senha_root_123',
-    database: 'wefit',
-    port: 3306,
+    password: process.env.MYSQLDB_PASSWORD,
+    database: process.env.MYSQLDB_DATABASE,
+    port: Number(process.env.MYSQLDB_PORT),
   },
   migrations: {
     directory: path.resolve(__dirname, '..', 'migrations'),
