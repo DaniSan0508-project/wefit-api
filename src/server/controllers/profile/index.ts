@@ -1,5 +1,5 @@
-import * as create from './Create';
+import * as controllers from './ProfileControllers';
 
 export const ProfileController = {
-  ...create,
+  ...controllers,
 };
