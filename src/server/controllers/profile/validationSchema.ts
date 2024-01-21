@@ -7,7 +7,7 @@ export interface IProfile {
   personType: 'individual' | 'legalEntity';
   cpf?: string;
   cnpj?: string;
-  cellphone: string;
+  cellphone?: string;
   telephone?: string;
   email: string;
   zipCode: string;
@@ -37,6 +37,15 @@ export const cnpjValidation = yup.string().test(
   }
 );
 
+export const cellphoneValidation = yup.string().test(
+  'cellphone-test',
+  'Cellphone is required for individuals',
+  function(value) {
+    const { personType } = this.parent;
+    return personType !== 'individual' || (personType === 'individual' && value != null);
+  }
+);
+
 export const bodyValidation: yup.Schema<IProfile> = yup.object().shape({
   acceptTerms: yup.boolean().required().oneOf([true], 'Terms must be accepted'),
   name: yup.string().required('Name is required'),
@@ -44,7 +53,7 @@ export const bodyValidation: yup.Schema<IProfile> = yup.object().shape({
   personType: yup.string().oneOf(['individual', 'legalEntity']).required('Person type is required'),
   cpf: cpfValidation,
   cnpj: cnpjValidation,
-  cellphone: yup.string().required('Cellphone is required'),
+  cellphone: cellphoneValidation,
   telephone: yup.string(),
   email: yup.string().email('Invalid email').required('Email is required'),
   zipCode: yup.string().required('Zip code is required'),
