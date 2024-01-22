@@ -13,6 +13,11 @@ docker-compose up -d
 
 Este comando irá criar um container Docker com uma instância do MySQL. Você pode acessar o banco de dados no `localhost:4568`:
 
+Após configurar o arquivo .env, é necessário criar as tabelas do banco de dados. Execute o seguinte comando:
+
+npm run knex:migrate
+
+Este comando irá aplicar as migrações necessárias para configurar a estrutura do banco de dados.
 
 ## Iniciando o Servidor Express
 
@@ -27,6 +32,8 @@ Ou, usando Yarn:
 
 yarn,
 yarn start
+
+##
 
 ## Rotas da Aplicação
 
