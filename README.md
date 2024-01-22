@@ -48,6 +48,10 @@ A aplicação inclui as seguintes rotas:
 
 Atualmente, o projeto não esta validando os campos de telefone e celular quanto a valores válidos no contexto do Brasil. Considerando que o projeto pode atender a um público brasileiro, uma melhoria seria implementar validações mais rigorosas.
 
+### Trabalhar com uma api que controle estados e cidades válidas.
+
+Atualmente a api esta trabalhando com os valores de cidades e estados apenas digitados , seria importante também trabalhar consumindo uma api como viacep , para ja trazer os dados do cep verificados.
+
 ### Middleware de Validação com Yup
 
 À medida que a aplicação cresce, a complexidade das validações pode aumentar. Para evitar repetição de código e manter um código mais limpo e organizado, seria benéfico criar um middleware de validação que utiliza a biblioteca Yup. Esse middleware pode ser usado para validar dados de entrada em várias partes do aplicativo, reduzindo a duplicação de código e melhorando a manutenibilidade.
