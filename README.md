@@ -42,7 +42,7 @@ A aplicação inclui as seguintes rotas:
 - **GET `/profile`**: Esta rota retorna os valores que estão armazenados no banco de dados para facilitar eventuais testes.
 - **Swagger UI**: A documentação das rotas da API está disponível em `localhost:4568/api-docs` através do Swagger UI.
 
-- ## Possíveis Melhorias
+## Possíveis Melhorias
 
 ### Validação de Campos de Telefone e Celular
 
